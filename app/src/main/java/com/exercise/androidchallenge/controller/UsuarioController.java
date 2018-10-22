@@ -25,17 +25,15 @@ public class UsuarioController {
         return usuarioDao.getAll();
     }
 
-    public void save(Usuario usuario){
-        usuarioDao.save(usuario);
-    }
-
     public void save(List<Usuario> usuarios){
 
         if (usuarios == null || usuarios.isEmpty()) return;
 
-        for (Usuario usu : usuarios){
-            save(usu);
-        }
+        usuarioDao.save(usuarios);
 
+    }
+
+    public void deleteALL() {
+        usuarioDao.deleteALL();
     }
 }

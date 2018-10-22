@@ -22,10 +22,6 @@ public abstract class BaseDao<T> {
         dbHelper = helper;
     }
 
-    protected DBMainHelper getDbHelper() {
-        return dbHelper;
-    }
-
     protected SQLiteDatabase openDatabase() {
         return dbHelper.openDatabase();
     }
@@ -50,21 +46,6 @@ public abstract class BaseDao<T> {
         }
     }
 
-    public Long saveIfNew(T object) {
-
-        try {
-            SQLiteDatabase db = openDatabase(); //getDbHelper().getWritableDatabase();
-            Long id = db.insert(getTableName(), null, toContentValues(object));
-            return id;
-
-        } catch (Exception e) {
-            Log.e(TAG, "Falha ao salvar", e);
-            return 0l;
-        } finally {
-            closeDatabase();
-        }
-
-    }
 
     public List<Long> save(List<T> objectList) {
 
@@ -123,11 +104,31 @@ public abstract class BaseDao<T> {
 
     }
 
+    public boolean deleteALL() {
+
+        try {
+
+            SQLiteDatabase db = openDatabase();
+            int rows = db.delete(getTableName(),null,null);
+
+            return rows > 0;
+
+        } catch (Exception e) {
+            Log.e(TAG, "Falha ao excluir registro", e);
+            return false;
+        } finally {
+            closeDatabase();
+        }
+
+
+    }
+
+
     public boolean deleteById(Long id) {
 
         try {
 
-            SQLiteDatabase db = openDatabase(); //getDbHelper().getWritableDatabase();
+            SQLiteDatabase db = openDatabase();
             int rows = db.delete(getTableName(), "ID = ?", new String[]{id.toString()});
 
             return rows > 0;
@@ -172,13 +173,6 @@ public abstract class BaseDao<T> {
 
         return list;
 
-    }
-
-    public long count() {
-        db = openDatabase();
-        long c = DatabaseUtils.queryNumEntries(db, getTableName());
-        closeDatabase();
-        return c;
     }
 
     protected abstract String getTableName();
