@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">AndroidChallenge</string>
+    <string name="qtd_usuarios">Quantidade de Usuarios:</string>
 </resources>

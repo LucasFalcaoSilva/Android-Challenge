@@ -22,6 +22,9 @@ public interface UsuarioDao {
     @Delete
     void delete(Usuario usuario);
 
+    @Query("DELETE FROM USUARIO")
+    void deleteALL();
+
     @Query(START_QUERY + ID + " = :idUsuario")
     Usuario getById(String idUsuario);
 
