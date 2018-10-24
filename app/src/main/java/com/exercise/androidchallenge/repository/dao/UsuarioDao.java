@@ -1,58 +1,30 @@
 package com.exercise.androidchallenge.repository.dao;
 
-import android.content.ContentValues;
-import android.database.Cursor;
+import android.arch.persistence.room.Dao;
+import android.arch.persistence.room.Delete;
+import android.arch.persistence.room.Insert;
+import android.arch.persistence.room.OnConflictStrategy;
+import android.arch.persistence.room.Query;
 
 import com.exercise.androidchallenge.domain.Usuario;
-import com.exercise.androidchallenge.repository.db.DBMainHelper;
 
-public class UsuarioDao extends BaseDao<Usuario> {
+import java.util.List;
 
-    public static final String TABLE_NAME = "USUARIO";
+@Dao
+public interface UsuarioDao {
 
-    public static final String ID = "ID";
-    private static final String NOME = "Nome";
-    private static final String USERNAME = "username";
-    private static final String EMAIL = "email";
+    String ID = "id";
+    String START_QUERY = "SELECT * FROM USUARIO WHERE ";
 
-    public UsuarioDao(DBMainHelper helper) {
-        super(helper);
-    }
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertAll(List<Usuario> usuarios);
 
-    public static String getCreateTableQuery() {
+    @Delete
+    void delete(Usuario usuario);
 
-        return "CREATE TABLE IF NOT EXISTS "
-                + TABLE_NAME + "("
-                + ID + " TEXT PRIMARY KEY,"
-                + NOME + " TEXT,"
-                + USERNAME + " TEXT,"
-                + EMAIL + " TEXT" + ")";
+    @Query(START_QUERY + ID + " = :idUsuario")
+    Usuario getById(String idUsuario);
 
-    }
-
-    @Override
-    protected String getTableName() {
-        return TABLE_NAME;
-    }
-
-    @Override
-    protected ContentValues toContentValues(Usuario usuario) {
-        ContentValues values = new ContentValues();
-        values.put(ID, usuario.getId());
-        values.put(NOME, usuario.getNome());
-        values.put(USERNAME, usuario.getUsername());
-        values.put(EMAIL, usuario.getEmail());
-
-        return values;
-    }
-
-    @Override
-    protected Usuario toObject(Cursor c) {
-        Usuario usuario = new Usuario();
-        usuario.setId(c.getLong(c.getColumnIndex(ID)));
-        usuario.setEmail(c.getString(c.getColumnIndex(EMAIL)));
-        usuario.setNome(c.getString(c.getColumnIndex(NOME)));
-        usuario.setUsername(c.getString(c.getColumnIndex(USERNAME)));
-        return usuario;
-    }
+    @Query("SELECT * FROM USUARIO")
+    List<Usuario> getAll();
 }

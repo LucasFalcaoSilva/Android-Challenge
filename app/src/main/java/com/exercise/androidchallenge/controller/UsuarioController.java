@@ -4,7 +4,6 @@ import android.content.Context;
 
 import com.exercise.androidchallenge.domain.Usuario;
 import com.exercise.androidchallenge.repository.dao.UsuarioDao;
-import com.exercise.androidchallenge.repository.db.DatabaseHelper;
 
 import java.util.List;
 
